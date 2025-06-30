@@ -1,0 +1,17 @@
+[
+  {
+    "description": "Replace QMap::keys()",
+    "match": "QMap\\s*::\\s*keys\\s*\\(\\)",
+    "replace": "keyBegin(), keyEnd()",
+    "tags": ["qt6", "deprecated"],
+    "enabled": true,
+    "priority": 1
+  },
+  {
+    "description": "Convert SIGNAL to function pointer syntax",
+    "match": "SIGNAL\\(([^)]+)\\)",
+    "replace": "&\\1",
+    "tags": ["qt6", "signal-slot"],
+    "enabled": false
+  }
+]
