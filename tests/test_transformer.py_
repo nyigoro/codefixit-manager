@@ -1,0 +1,27 @@
+import pytest
+from cfm.engine.transformer import apply_rules, load_rules
+
+FIXTURE_PATH = "tests/fixtures/"
+SAMPLE_FILE = FIXTURE_PATH + "input_sample.cpp"
+RULES_FILE = "rules/cpp/qt5to6.json"
+
+def test_load_rules():
+    rules = load_rules(RULES_FILE)
+    assert isinstance(rules, list)
+    assert any("match" in rule for rule in rules)
+
+def test_apply_rules_dry_run(tmp_path):
+    test_file = tmp_path / "sample.cpp"
+    test_file.write_text((Path(SAMPLE_FILE).read_text()))
+
+    report = apply_rules(
+        file_paths=[str(test_file)],
+        rule_path=RULES_FILE,
+        dry_run=True,
+        backup=False,
+        show_diff=False
+    )
+
+    # Expect at least one file changed
+    assert report["total_files_changed"] == 1
+    assert str(test_file) in report["per_file"]
