@@ -22,7 +22,8 @@ report = apply_rules(
     )
 
     parser.add_argument("--lang", required=True, help="Programming language (e.g. cpp, python)")
-    parser.add_argument("--rule", required=True, help="Name of the ruleset (e.g. qt5to6)")
+   parser.add_argument("--rule", required=True, nargs="+",
+                    help="One or more rule packs (e.g. qt5to6 stylefix)")
 
     parser.add_argument("--path", required=True, help="Directory to process")
 
@@ -40,11 +41,17 @@ report = apply_rules(
 
    from cfm.utils.ruleloader import resolve_rule_path
 
-rules_path = resolve_rule_path(args.rule, args.lang)
+files = collect_files(args.path, args.lang)
 
-    files = collect_files(args.path, args.lang)
+combined_report = {
+    "total_files_changed": 0,
+    "per_rule": {},
+    "per_file": {}
+}
 
-    # Apply rules and collect report
+for rule_name in args.rule:
+    rules_path = resolve_rule_path(rule_name, args.lang)
+    print(f"\n🔧 Applying rule set: {rule_name}")
     report = apply_rules(
         files,
         rules_path,
@@ -52,6 +59,17 @@ rules_path = resolve_rule_path(args.rule, args.lang)
         backup=args.backup,
         show_diff=args.diff
     )
+
+    # Merge report
+    combined_report["total_files_changed"] += report["total_files_changed"]
+    for rule, count in report["per_rule"].items():
+        combined_report["per_rule"][rule] = (
+            combined_report["per_rule"].get(rule, 0) + count
+        )
+    for file, count in report["per_file"].items():
+        combined_report["per_file"][file] = (
+            combined_report["per_file"].get(file, 0) + count
+        )
 
     # --- Summary output ---
     print("\n📊 Summary Report")
