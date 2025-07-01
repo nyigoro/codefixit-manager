@@ -1,0 +1,9 @@
+[
+  {
+    "name": "qt5to6",
+    "language": "cpp",
+    "url": "https://github.com/build-africa-eng/codefixit-manager/tree/main/rules/cpp/qt5to6",
+    "version": "1.0.0",
+    "description": "Upgrade Qt5 APIs to Qt6 equivalents"
+  }
+]
