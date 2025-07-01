@@ -1,0 +1,4 @@
+include README.md
+include cfm/cli.py
+recursive-include rules *
+recursive-include cfm *
