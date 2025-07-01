@@ -1,0 +1,10 @@
+{
+  "lang": "cpp",
+  "rule": "qt5to6",
+  "path": "./src",
+  "dry_run": true,
+  "check": false,
+  "backup": false,
+  "report": "json",
+  "diff": false
+}
