@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 from cfm.engine.filewalker import collect_files
 from cfm.engine.transformer import apply_rules
 from cfm.utils.config import load_cfmrc
 from cfm.utils.ruleloader import resolve_rule_path
 from cfm.utils.htmlreport import generate_html_report
-import json
+from cfm.utils.registry import list_available_rules
+from cfm.utils.installer import install_rule_from_url
+from cfm.utils.validator import validate_rule_file
+from cfm.utils.generator import generate_rule_from_prompt
+
 
 def main():
     parser = argparse.ArgumentParser(description="CodeFixit Manager CLI")
 
-    parser.add_argument("command", choices=["fix", "dry-run", "list-rules"], help="Action to perform")
+    parser.add_argument("command", choices=[
+        "fix", "dry-run", "list-rules", "install", "validate-rule", "rule-gen"
+    ], help="Action to perform")
+
     parser.add_argument("--lang", help="Programming language (e.g. cpp, python)")
-    parser.add_argument("--rule", required=True, nargs="+", help="One or more rule packs (e.g. qt5to6 modernizer)")
+    parser.add_argument("--rule", nargs="+", help="One or more rule packs (e.g. qt5to6 modernizer)")
     parser.add_argument("--path", help="Directory to process")
 
     parser.add_argument("--dry-run", action="store_true", help="Alias for `dry-run` command")
@@ -21,9 +29,42 @@ def main():
     parser.add_argument("--diff", action="store_true", help="Show before/after diff in dry-run mode")
     parser.add_argument("--report", choices=["json", "html"], help="Output report format")
 
+    parser.add_argument("--url", help="Rule pack URL to install (used with install)")
+    parser.add_argument("--prompt", help="Natural language prompt (used with rule-gen)")
+    parser.add_argument("--output", help="Output file path for rule-gen or validate-rule")
+
     args = parser.parse_args()
 
-    # 🧠 Load config from .cfmrc (if needed)
+    # 🎯 COMMAND: list-rules
+    if args.command == "list-rules":
+        list_available_rules(args.lang or "cpp")
+        return
+
+    # 📦 COMMAND: install
+    if args.command == "install":
+        if not args.url:
+            print("❌ --url is required with install")
+            return
+        install_rule_from_url(args.url)
+        return
+
+    # 🛠️ COMMAND: validate-rule
+    if args.command == "validate-rule":
+        if not args.output:
+            print("❌ --output path required for validate-rule")
+            return
+        validate_rule_file(args.output)
+        return
+
+    # 🧠 COMMAND: rule-gen
+    if args.command == "rule-gen":
+        if not args.prompt or not args.output:
+            print("❌ --prompt and --output are required for rule-gen")
+            return
+        generate_rule_from_prompt(args.prompt, args.output)
+        return
+
+    # 🧠 Load config from .cfmrc
     config = load_cfmrc()
     for key, value in config.items():
         current = getattr(args, key, None)
@@ -32,13 +73,8 @@ def main():
         if current in [None, False]:
             setattr(args, key, value)
 
-        if args.command == "list-rules":
-        from cfm.utils.registry import list_available_rules
-        list_available_rules(args.lang or "cpp")  # default to cpp
-        return
-        
-    if not args.lang or not args.path:
-        parser.error("Missing required arguments: --lang and/or --path")
+    if not args.lang or not args.path or not args.rule:
+        parser.error("Missing required arguments: --lang, --rule, or --path")
 
     files = collect_files(args.path, args.lang)
 
@@ -78,5 +114,7 @@ def main():
         exit(1)
     elif args.command == "dry-run":
         print("✅ All files are up to date.")
+
+
 if __name__ == "__main__":
     main()
