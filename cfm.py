@@ -3,6 +3,8 @@
 import argparse
 from cfm.engine.filewalker import collect_files
 from cfm.engine.transformer import apply_rules
+from cfm.utils.config import load_cfmrc
+
 
 def main():
     parser = argparse.ArgumentParser(description="CodeFixit Manager CLI")
@@ -28,6 +30,13 @@ report = apply_rules(
                         help="Exit with non-zero if changes would be made (CI mode)")
 
     args = parser.parse_args()
+
+    config = load_cfmrc()
+
+    # Merge config fallback for missing CLI args
+    for key, value in config.items():
+        if getattr(args, key, None) in [None, False]:
+            setattr(args, key, value)
 
     rules_path = f"rules/{args.lang}/{args.rule}.json"
     files = collect_files(args.path, args.lang)
