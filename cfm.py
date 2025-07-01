@@ -11,7 +11,7 @@ import json
 def main():
     parser = argparse.ArgumentParser(description="CodeFixit Manager CLI")
 
-    parser.add_argument("command", choices=["fix", "dry-run"], help="Action to perform")
+    parser.add_argument("command", choices=["fix", "dry-run", "list-rules"], help="Action to perform")
     parser.add_argument("--lang", help="Programming language (e.g. cpp, python)")
     parser.add_argument("--rule", required=True, nargs="+", help="One or more rule packs (e.g. qt5to6 modernizer)")
     parser.add_argument("--path", help="Directory to process")
@@ -32,6 +32,11 @@ def main():
         if current in [None, False]:
             setattr(args, key, value)
 
+        if args.command == "list-rules":
+        from cfm.utils.registry import list_available_rules
+        list_available_rules(args.lang or "cpp")  # default to cpp
+        return
+        
     if not args.lang or not args.path:
         parser.error("Missing required arguments: --lang and/or --path")
 
