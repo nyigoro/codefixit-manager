@@ -4,6 +4,8 @@ import argparse
 from cfm.engine.filewalker import collect_files
 from cfm.engine.transformer import apply_rules
 from cfm.utils.config import load_cfmrc
+from cfm.utils.htmlreport import generate_html_report
+
 
 
 def main():
