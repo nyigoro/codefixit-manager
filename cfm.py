@@ -38,7 +38,10 @@ report = apply_rules(
         if getattr(args, key, None) in [None, False]:
             setattr(args, key, value)
 
-    rules_path = f"rules/{args.lang}/{args.rule}.json"
+   from cfm.utils.ruleloader import resolve_rule_path
+
+rules_path = resolve_rule_path(args.rule, args.lang)
+
     files = collect_files(args.path, args.lang)
 
     # Apply rules and collect report
