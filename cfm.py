@@ -11,13 +11,18 @@ from cfm.utils.registry import list_available_rules
 from cfm.utils.installer import install_rule_from_url
 from cfm.utils.validator import validate_rule_file
 from cfm.utils.generator import generate_rule_from_prompt
+from cfm.utils.scaffold import init_rule_pack
+from cfm.utils.testrunner import run_rule_tests
+from cfm.utils.publish import publish_rule_pack
+from cfm.utils.vscode import setup_vscode_workspace
 
 
 def main():
     parser = argparse.ArgumentParser(description="CodeFixit Manager CLI")
 
     parser.add_argument("command", choices=[
-        "fix", "dry-run", "list-rules", "install", "validate-rule", "rule-gen"
+        "fix", "dry-run", "list-rules", "install", "validate-rule", "rule-gen",
+        "init", "test", "vscode-hook", "publish"
     ], help="Action to perform")
 
     parser.add_argument("--lang", help="Programming language (e.g. cpp, python)")
@@ -32,6 +37,9 @@ def main():
     parser.add_argument("--url", help="Rule pack URL to install (used with install)")
     parser.add_argument("--prompt", help="Natural language prompt (used with rule-gen)")
     parser.add_argument("--output", help="Output file path for rule-gen or validate-rule")
+
+    parser.add_argument("--name", help="Used for `init` and `publish`")
+    parser.add_argument("--test-dir", help="Test cases directory for `test`")
 
     args = parser.parse_args()
 
@@ -62,6 +70,35 @@ def main():
             print("❌ --prompt and --output are required for rule-gen")
             return
         generate_rule_from_prompt(args.prompt, args.output)
+        return
+
+    # 🧰 COMMAND: init
+    if args.command == "init":
+        if not args.name or not args.lang:
+            print("❌ --name and --lang are required for init")
+            return
+        init_rule_pack(args.name, args.lang)
+        return
+
+    # 🧩 COMMAND: test
+    if args.command == "test":
+        if not args.rule or not args.test_dir:
+            print("❌ --rule and --test-dir are required for test")
+            return
+        run_rule_tests(args.rule[0], args.test_dir)
+        return
+
+    # 💻 COMMAND: vscode-hook
+    if args.command == "vscode-hook":
+        setup_vscode_workspace()
+        return
+
+    # 📦 COMMAND: publish
+    if args.command == "publish":
+        if not args.name or not args.lang:
+            print("❌ --name and --lang are required for publish")
+            return
+        publish_rule_pack(args.name, args.lang)
         return
 
     # 🧠 Load config from .cfmrc
