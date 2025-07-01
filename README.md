@@ -10,13 +10,15 @@
 
 ### Option 1: From Source (Dev Mode)
 
-```bash
+```bash```
 git clone https://github.com/build-africa-eng/codefixit-manager.git
 cd codefixit-manager
 python3 cfm.py --help
 
-⚙ Supported Commands
-Command	Purpose
+---
+
+ ## ⚙Supported Commands
+### Command	Purpose
 fix / dry-run	Apply rules or preview changes
 list-rules	Show available local rules
 init	Scaffold new rule pack
@@ -26,7 +28,7 @@ validate-rule	Lint and check rule JSON syntax
 publish	Package and prepare rule pack for release
 vscode-hook	Auto-generate .vscode dev setup
 
-🧠 Example
+### 🧠 Example
 bash
 Copy
 Edit
