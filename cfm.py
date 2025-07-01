@@ -35,9 +35,12 @@ report = apply_rules(
     config = load_cfmrc()
 
     # Merge config fallback for missing CLI args
-    for key, value in config.items():
-        if getattr(args, key, None) in [None, False]:
-            setattr(args, key, value)
+  for key, value in config.items():
+    current = getattr(args, key, None)
+    if key == "rule" and isinstance(current, list) and current:
+        continue  # Don't override CLI list with config list
+    if current in [None, False]:
+        setattr(args, key, value)
 
    from cfm.utils.ruleloader import resolve_rule_path
 
