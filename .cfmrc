@@ -1,6 +1,6 @@
 {
   "lang": "cpp",
-  "rule": "qt5to6",
+  "rule": ["qt5to6", "stylefix"],
   "path": "./src",
   "dry_run": true,
   "check": false,
