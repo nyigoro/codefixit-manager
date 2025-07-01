@@ -12,7 +12,7 @@ def main():
 parser.add_argument("--backup", action="store_true",
                         help="Create .bak backups before overwriting files")
 
-parser.add_argument("--report", choices=["json"], help="Output report format")
+parser.add_argument("--report", choices=["json", "html"], help="Output report format")
 report = apply_rules(
         files,
         rules_path,
