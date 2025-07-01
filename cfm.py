@@ -68,5 +68,10 @@ def main():
     elif args.report == "html":
         generate_html_report(combined_report)
 
+    if args.command == "dry-run" and combined_report["total_files_changed"] > 0:
+        print("❌ CodeFixit found files that need formatting.")
+        exit(1)
+    elif args.command == "dry-run":
+        print("✅ All files are up to date.")
 if __name__ == "__main__":
     main()
