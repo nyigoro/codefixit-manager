@@ -14,7 +14,8 @@ dependencies = [
   "colorama",
   "rich",
   "requests",
-  "openai" 
+  "openai",
+  "watchdog"
 ]
 
 [project.scripts]
