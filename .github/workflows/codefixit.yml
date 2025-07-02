@@ -3,7 +3,7 @@ name: CodeFixit Check
 on:
   push:
     branches:
-      - main 
+      - main
 
 jobs:
   codefixit:
@@ -20,8 +20,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install package (editable mode)
-        run: pip install -e .  # setuptools-scm reads version from git tag
+      - name: Install package (editable mode + [ai] extras)
+        run: |
+          pip install --upgrade pip
+          pip install -e .[ai]
 
       - name: Run CodeFixit dry-run
         run: |
