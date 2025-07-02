@@ -1,2 +1,5 @@
-touch cfm/__init__.py
-touch cfm/engine/__init__.py
+# cfm/__init__.py
+
+from importlib.metadata import version
+
+__version__ = version("codefixit-manager")
