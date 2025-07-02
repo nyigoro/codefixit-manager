@@ -39,7 +39,7 @@ def apply_rules(file_paths, rule_path, dry_run=False, backup=False, show_diff=Fa
 
             print(f"✔ Matched in: {file_path} ({file_change_count} change(s))")
             if dry_run:
-    print("⚠ Dry run only. No changes saved.")
+                print("⚠ Dry run only. No changes saved.")
 
     if show_diff:
         from difflib import unified_diff
