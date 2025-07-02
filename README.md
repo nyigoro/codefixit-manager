@@ -3,7 +3,7 @@
 
 > Modernize, refactor, and auto-fix legacy code using customizable transformation rules.
 
-[![Test Rules](https://github.com/build-africa-eng/codefixit-manager/actions/workflows/test-rules.yml/badge.svg)](https://github.com/build-africa-eng/codefixit-manager/actions)
+[![Test Rules](https://github.com/nyigoro/codefixit-manager/actions/workflows/test-rules.yml/badge.svg)](https://github.com/build-africa-eng/codefixit-manager/actions)
 
 ---
 
