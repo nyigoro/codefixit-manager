@@ -11,17 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
+      - name: Fetch Git tags (required by setuptools-scm)
+        run: git fetch --tags
 
-    - name: Install package (editable mode)
-      run: |
-        pip install -e .
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
-    - name: Run CodeFixit dry-run
-      run: |
-        cfm dry-run --lang cpp --rule qt5to6 --path ./src --diff --report json
+      - name: Install package (editable mode)
+        run: pip install -e .  # setuptools-scm reads version from git tag
+
+      - name: Run CodeFixit dry-run
+        run: |
+          cfm dry-run --lang cpp --rule qt5to6 --path ./src --diff --report json
