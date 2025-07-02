@@ -13,7 +13,7 @@ from cfm.utils.installer import install_rule_from_url
 from cfm.utils.validator import validate_rule_file
 from cfm.utils.generator import generate_rule_from_prompt
 from cfm.utils.scaffold import init_rule_pack
-from cfm.utils.testrunner import run_rule_tests, test_all_rules
+from cfm.utils.testrunner import run_rule_tests
 from cfm.utils.publish import publish_rule_pack
 from cfm.utils.vscode import setup_vscode_workspace
 from cfm.utils.watcher import watch_directory
