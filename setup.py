@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="codefixit-manager",
-    version="1.0.5",
+    version="1.0.6",
     description="Modernize and auto-refactor legacy code using rule-based fixers.",
     author="Nyigoro",
     author_email="nyigoro@gmail.com",
