@@ -1,18 +1,19 @@
-name: CodeFixit Check
+name: 🤖 CodeFixit Auto-Fix PR
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  codefixit:
+  codefixit-autofix:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for PR diffs
 
-      - name: Fetch Git tags (required by setuptools-scm)
+      - name: Fetch Git tags (for setuptools-scm)
         run: git fetch --tags
 
       - name: Set up Python
@@ -20,11 +21,20 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install package (editable mode + [ai] extras)
+      - name: Install CodeFixit Manager with extras
         run: |
-          pip install --upgrade pip
-          pip install -e .[ai]
+          pip install -e .[ai,watch]
 
-      - name: Run CodeFixit dry-run
+      - name: Run CodeFixit Fix
         run: |
-          cfm dry-run --lang cpp --rule qt5to6 --path ./src --diff --report json
+          cfm fix --lang cpp --rule qt5to6 --path ./src
+
+      - name: Create Pull Request with fixes
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "🤖 CodeFixit: Auto-applied rule pack qt5to6"
+          branch: codefixit/fixes-qt5to6
+          title: "Auto-fix: qt5to6 rule updates"
+          body: |
+            This PR contains automated fixes applied using the `qt5to6` rule pack.
+            Please review and merge if appropriate.
