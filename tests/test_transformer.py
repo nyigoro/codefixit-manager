@@ -2,8 +2,10 @@ import pytest
 from pathlib import Path
 from cfm.engine.transformer import apply_rules, load_rules
 
+FIXTURE_PATH = Path("src/")
 FIXTURE_PATH = Path("tests/fixtures/")
 SAMPLE_FILE = FIXTURE_PATH / "input_sample.cpp"
+SAMPLE_FILE= FIXTURE_PATH /"example.cpp"
 RULES_FILE = "rules/cpp/qt5to6/qt5to6.json"
 
 def test_load_rules():
