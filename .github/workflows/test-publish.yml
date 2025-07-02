@@ -1,36 +1,36 @@
-name: 🧪 Publish to TestPyPI
+name: 📦 Release to PyPI & GitHub
 
 on:
-  workflow_dispatch:  # You run this manually from GitHub UI
+  push:
+    tags:
+      - 'v*.*.*'
 
 permissions:
   id-token: write
-  contents: read
+  contents: write
 
 jobs:
-  test-publish:
+  publish:
+    name: 🚀 Publish package
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🔄 Checkout
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.x'
+          cache: 'pip'
 
-      - name: 🛠 Install build tools
-        run: |
-          pip install --upgrade pip
-          pip install build
+      - name: 📦 Install build backend
+        run: pip install build
 
-      - name: 📦 Build the package
+      - name: 🛠️ Build distribution
         run: python -m build
 
-      - name: 🚀 Publish to TestPyPI
+      - name: 🚀 Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-             repository-url: https://test.pypi.org/legacy/
-             api-token: ${{ secrets.TEST_PYPI_API_TOKEN }}
-
+          attestations: true
