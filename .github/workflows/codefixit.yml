@@ -2,9 +2,8 @@ name: CodeFixit Check
 
 on:
   push:
-    paths: ["src/**", "rules/**"]
-  pull_request:
-    paths: ["src/**", "rules/**"]
+    branches:
+      - main 
 
 jobs:
   codefixit:
