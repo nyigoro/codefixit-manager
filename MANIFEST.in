@@ -1,4 +1,16 @@
 include README.md
+include pyproject.toml
+
+# Include CLI entrypoint explicitly
 include cfm/cli.py
+
+# Include all rule packs and metadata recursively
 recursive-include rules *
-recursive-include cfm *
+
+# Include all source files in cfm/
+recursive-include cfm *.py
+
+# Optional: Include JSON, YAML, and HTML assets (if used)
+recursive-include cfm *.json
+recursive-include cfm *.yaml
+recursive-include cfm *.html
