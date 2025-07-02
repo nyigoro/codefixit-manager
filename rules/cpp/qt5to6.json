@@ -1,8 +1,8 @@
 [
   {
-    "description": "Replace QMap::keys()",
-    "match": "QMap\\s*::\\s*keys\\s*\\(\\)",
-    "replace": "keyBegin(), keyEnd()",
+    "description": "Replace QMap::keys() instance usage",
+    "match": "\\b(\\w+)\\.keys\\s*\\(\\)",
+    "replace": "\\1.keyBegin(), \\1.keyEnd()",
     "tags": ["qt6", "deprecated"],
     "enabled": true,
     "priority": 1
