@@ -11,7 +11,7 @@ from cfm.utils.htmlreport import generate_html_report
 from cfm.utils.registry import list_available_rules
 from cfm.utils.installer import install_rule_from_url
 from cfm.utils.validator import validate_rule_file
-from cfm.utils.generator import generate_rule_from_prompt, interactive_rule_gen
+from cfm.utils.generator import generate_rule_from_prompt
 from cfm.utils.scaffold import init_rule_pack
 from cfm.utils.testrunner import run_rule_tests, test_all_rules
 from cfm.utils.publish import publish_rule_pack
