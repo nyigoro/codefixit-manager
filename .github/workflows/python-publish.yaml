@@ -3,7 +3,7 @@ name: 📦 Release to PyPI (Trusted Publisher)
 on:
   push:
     tags:
-      - 'v*.*.*'  # Only run on version tags
+      - 'v1.0.o'  # Only run on version tags
 
 permissions:
   id-token: write  # Required for OIDC
