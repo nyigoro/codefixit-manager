@@ -1,35 +1,48 @@
-name: 📦 Release to PyPI
+name: 📦 Publish to PyPI & GitHub
 
 on:
   push:
-    branches:
-      - main  # 🔁 triggers every time you push to main
+    branches: [main]
+    tags: ['*']            # Triggers on tag push (e.g., 1.0.0)
+  workflow_dispatch:       # Allows manual run from Actions tab
 
 permissions:
-  id-token: write
-  contents: write
+  id-token: write          # Required for Trusted Publishing to PyPI
+  contents: write          # Required to create GitHub releases
 
 jobs:
   publish:
+    name: 🚀 Publish to PyPI & Create Release
     runs-on: ubuntu-latest
-    environment: pypi-release  # ✅ optional, set this up in GitHub > Settings > Environments
 
     steps:
-      - name: ⬇️ Checkout code
+      - name: ⬇️ Checkout
         uses: actions/checkout@v4
 
-      - name: 🐍 Setup Python
+      - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+          cache: pip
 
-      - name: 📦 Install build tools
+      - name: 📦 Install build backend
         run: pip install build
 
-      - name: 🛠️ Build distribution
+      - name: 🛠 Build distribution
         run: python -m build
 
       - name: 🚀 Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           attestations: true
+
+      - name: 📝 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "Release ${{ github.ref_name }}"
+          body: |
+            Automated release of version `${{ github.ref_name }}`
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
