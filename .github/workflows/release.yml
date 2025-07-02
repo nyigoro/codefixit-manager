@@ -1,0 +1,40 @@
+name: 📦 GitHub Release Only
+
+on:
+  push:
+    tags:
+      - "*.*.*"  # e.g., 1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: 🚀 GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: 📦 Install build tools
+        run: pip install build
+
+      - name: 🛠️ Build distribution
+        run: python -m build
+
+      - name: 📝 Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "Release ${{ github.ref_name }}"
+          body: |
+            Automated release of version `${{ github.ref_name }}`.
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
