@@ -3,18 +3,18 @@ import sys
 import json
 
 def load_cfmrc():
-    """Load ~/.cfmrc if it exists"""
-    cfmrc_path = os.path.expanduser("~/.cfmrc")
-    if os.path.exists(cfmrc_path):
+    """Load ~/.cfmrc if available"""
+    path = os.path.expanduser("~/.cfmrc")
+    if os.path.exists(path):
         try:
-            with open(cfmrc_path, "r", encoding="utf-8") as f:
+            with open(path, "r", encoding="utf-8") as f:
                 return json.load(f)
         except json.JSONDecodeError:
-            print("⚠️ Failed to parse ~/.cfmrc. Please check the format.")
+            print("⚠️ Invalid JSON in ~/.cfmrc")
     return {}
 
 def generate_rule_from_prompt(prompt, output_path):
-    # Skip entirely if in GitHub Actions or CI
+    # 🚫 Skip LLM logic in CI or GitHub Actions
     if os.environ.get("CI") or not sys.stdin.isatty():
         print("⚠️ Skipping AI rule generation in CI or non-interactive environment.")
         return
@@ -25,15 +25,15 @@ def generate_rule_from_prompt(prompt, output_path):
         print("❌ Missing `openai` package. Run: pip install .[ai]")
         return
 
-    # Try to load API key from env or config
+    # Prefer environment variable (used in GitHub Actions secrets)
     api_key = os.getenv("OPENAI_API_KEY") or load_cfmrc().get("openai_api_key")
     if not api_key:
-        print("❌ No OpenAI API key found in environment or ~/.cfmrc.")
+        print("❌ No OpenAI API key found in env or ~/.cfmrc")
         return
 
     openai.api_key = api_key
 
-    print("🤖 Contacting LLM to generate rule...")
+    print("🤖 Generating rule via OpenAI...")
     try:
         response = openai.ChatCompletion.create(
             model="gpt-4",
@@ -46,15 +46,15 @@ def generate_rule_from_prompt(prompt, output_path):
         print(f"❌ OpenAI API error: {e}")
         return
 
-    text = response.choices[0].message.content
+    content = response.choices[0].message.content
     try:
-        rule = json.loads(text)
+        rule = json.loads(content)
     except json.JSONDecodeError:
-        print("⚠️ Model did not return valid JSON. Showing raw output:\n")
-        print(text)
+        print("⚠️ Model output was not valid JSON. Showing raw text:\n")
+        print(content)
         return
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(rule, f, indent=2)
 
-    print(f"✅ AI-generated rule saved to: {output_path}")
+    print(f"✅ Rule saved to {output_path}")
