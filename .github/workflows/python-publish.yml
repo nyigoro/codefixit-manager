@@ -3,7 +3,7 @@ name: 📦 Release to PyPI & GitHub
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v1.0.0'
 
 permissions:
   id-token: write
