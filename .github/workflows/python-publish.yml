@@ -3,47 +3,34 @@ name: 📦 Release to PyPI & GitHub
 on:
   push:
     tags:
-      - 'v*'  # triggers on tags like v0.2.0
+      - 'v*.*.*'
 
 permissions:
-  contents: write      # for GitHub Release
-  id-token: write      # for PyPI trusted publishing
+  id-token: write
+  contents: write
 
 jobs:
-  build-publish:
+  publish:
+    name: 🚀 Publish package
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🔄 Checkout code
+      - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
       - name: 🐍 Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.x'
+          cache: 'pip'
 
       - name: 📦 Install build backend
-        run: |
-          pip install --upgrade pip
-          pip install build
+        run: pip install build
 
-      - name: 🔧 Build package
+      - name: 🛠️ Build distribution
         run: python -m build
 
       - name: 🚀 Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: dist/
-
-  release-notes:
-    needs: build-publish
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 🔄 Checkout again (required)
-        uses: actions/checkout@v4
-
-      - name: 📝 Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          generate_release_notes: true
+          attestations: true
