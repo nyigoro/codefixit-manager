@@ -2,8 +2,8 @@ name: 📦 Release to PyPI & GitHub
 
 on:
   push:
-    tags:
-      - 'v1.0.0'
+    branches:
+      - main
 
 permissions:
   id-token: write
