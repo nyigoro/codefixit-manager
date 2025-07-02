@@ -11,19 +11,19 @@ from cfm.utils.htmlreport import generate_html_report
 from cfm.utils.registry import list_available_rules
 from cfm.utils.installer import install_rule_from_url
 from cfm.utils.validator import validate_rule_file
-from cfm.utils.generator import generate_rule_from_prompt
+from cfm.utils.generator import generate_rule_from_prompt, interactive_rule_gen
 from cfm.utils.scaffold import init_rule_pack
-from cfm.utils.testrunner import run_rule_tests
+from cfm.utils.testrunner import run_rule_tests, test_all_rules
 from cfm.utils.publish import publish_rule_pack
 from cfm.utils.vscode import setup_vscode_workspace
-
+from cfm.utils.watcher import watch_directory
 
 def main():
     parser = argparse.ArgumentParser(description="CodeFixit Manager CLI")
 
     parser.add_argument("command", choices=[
         "fix", "dry-run", "list-rules", "install", "validate-rule", "rule-gen",
-        "init", "test", "vscode-hook", "publish"
+        "init", "test", "test-all", "vscode-hook", "publish", "watch", "prompt-test"
     ], help="Action to perform")
 
     parser.add_argument("--lang", help="Programming language (e.g. cpp, python)")
@@ -73,6 +73,11 @@ def main():
         generate_rule_from_prompt(args.prompt, args.output)
         return
 
+    # 🧠 COMMAND: prompt-test
+    if args.command == "prompt-test":
+        interactive_rule_gen()
+        return
+
     # 🧰 COMMAND: init
     if args.command == "init":
         if not args.name or not args.lang:
@@ -89,6 +94,11 @@ def main():
         run_rule_tests(args.rule[0], args.test_dir)
         return
 
+    # 🧪 COMMAND: test-all
+    if args.command == "test-all":
+        test_all_rules()
+        return
+
     # 💻 COMMAND: vscode-hook
     if args.command == "vscode-hook":
         setup_vscode_workspace()
@@ -100,6 +110,14 @@ def main():
             print("❌ --name and --lang are required for publish")
             return
         publish_rule_pack(args.name, args.lang)
+        return
+
+    # 🔁 COMMAND: watch
+    if args.command == "watch":
+        if not args.path or not args.lang or not args.rule:
+            print("❌ Missing --path --lang --rule for watch")
+            return
+        watch_directory(args.path, args.lang, args.rule[0])
         return
 
     # 🧠 Load config from .cfmrc
