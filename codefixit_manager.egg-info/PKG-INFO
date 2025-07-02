@@ -1,0 +1,67 @@
+Metadata-Version: 2.4
+Name: codefixit-manager
+Version: 1.12.0
+Summary: 🛠️ A powerful CLI to modernize and refactor codebases using customizable rule packs.
+Home-page: https://github.com/nyigoro/codefixit-manager
+Author: Nyigoro
+Author-email: nyigoro <nyigoro@gmail.com>
+License: MIT
+Keywords: refactor,cli,modernizer,codefix,qt5to6,cfm
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: colorama
+Requires-Dist: rich
+Requires-Dist: requests
+Requires-Dist: openai
+Requires-Dist: watchdog
+Dynamic: author
+Dynamic: home-page
+Dynamic: license-file
+Dynamic: requires-python
+
+
+# 🛠️ CodeFixit Manager (CFM)
+
+> Modernize, refactor, and auto-fix legacy code using customizable transformation rules.
+
+[![Test Rules](https://github.com/nyigoro/codefixit-manager/actions/workflows/test-rules.yml/badge.svg)](https://github.com/nyigoro/codefixit-manager/actions)
+
+---
+
+## 📦 Install
+
+### Option 1: From Source (Dev Mode)
+
+```bash
+git clone https://github.com/build-africa-eng/codefixit-manager.git
+cd codefixit-manager
+python3 cfm.py --help
+````
+
+---
+
+## ⚙ Supported Commands
+
+| Command           | Purpose                                     |
+| ----------------- | ------------------------------------------- |
+| `fix` / `dry-run` | Apply rules or preview changes              |
+| `list-rules`      | Show available local rules                  |
+| `init`            | Scaffold new rule pack                      |
+| `test`            | Run rule-based tests (input → expected)     |
+| `rule-gen`        | Generate rules from natural language prompt |
+| `validate-rule`   | Lint and check rule JSON syntax             |
+| `publish`         | Package and prepare rule pack for release   |
+| `vscode-hook`     | Auto-generate `.vscode` dev setup           |
+
+---
+
+## 🧠 Example
+
+```bash
+cfm init --name qt5to6 --lang cpp
+cfm fix --lang cpp --rule qt5to6 --path ./src
+cfm test --rule rules/cpp/qt5to6/qt5to6.json --test-dir rules/cpp/qt5to6/tests
+```
+
+

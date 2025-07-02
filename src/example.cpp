@@ -2,5 +2,5 @@
 
 void demo() {
     QMap<QString, int> map;
-    auto keys = map.keys(); // deprecated
+    auto keys = map.keyBegin(), map.keyEnd(); // deprecated
 }
