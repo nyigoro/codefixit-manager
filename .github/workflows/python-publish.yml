@@ -1,31 +1,32 @@
-name: 📦 Release to PyPI (Trusted Publisher)
+name: 📦 Release to PyPI
 
 on:
   push:
-    tags:
-      - 'v*.*.*'  # Only run on version tags
+    branches:
+      - main  # 🔁 triggers every time you push to main
 
 permissions:
-  id-token: write  # Required for OIDC
-  contents: write  # Needed to upload releases to GitHub
+  id-token: write
+  contents: write
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: pypi-release
+    environment: pypi-release  # ✅ optional, set this up in GitHub > Settings > Environments
+
     steps:
-      - name: ⬇️ Checkout repo
+      - name: ⬇️ Checkout code
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python
+      - name: 🐍 Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: 📦 Install build backend
+      - name: 📦 Install build tools
         run: pip install build
 
-      - name: 🛠️ Build package
+      - name: 🛠️ Build distribution
         run: python -m build
 
       - name: 🚀 Publish to PyPI
