@@ -2,6 +2,7 @@ import json
 import re
 from pathlib import Path
 from shutil import copyfile
+from difflib import unified_diff
 
 def load_rules(rule_path):
     with open(rule_path, "r", encoding="utf-8") as f:
@@ -40,18 +41,15 @@ def apply_rules(file_paths, rule_path, dry_run=False, backup=False, show_diff=Fa
             print(f"✔ Matched in: {file_path} ({file_change_count} change(s))")
             if dry_run:
                 print("⚠ Dry run only. No changes saved.")
-
-    if show_diff:
-        from difflib import unified_diff
-        diff = unified_diff(
-            original.splitlines(keepends=True),
-            content.splitlines(keepends=True),
-            fromfile=file_path + " (original)",
-            tofile=file_path + " (updated)"
-        )
-        print("".join(diff))
+                if show_diff:
+                    diff = unified_diff(
+                        original.splitlines(keepends=True),
+                        content.splitlines(keepends=True),
+                        fromfile=file_path + " (original)",
+                        tofile=file_path + " (updated)"
+                    )
+                    print("".join(diff))
             else:
-                # 🔐 Backup before overwrite
                 if backup:
                     backup_path = file_path + ".bak"
                     copyfile(file_path, backup_path)
