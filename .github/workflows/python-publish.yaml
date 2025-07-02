@@ -1,18 +1,17 @@
-name: 📦 Release to PyPI & GitHub
+name: 📦 Release to PyPI (Trusted Publisher)
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'  # Only run on version tags
 
 permissions:
-  contents: write  # id-token not required for token-based publishing
+  id-token: write  # Required for OIDC
+  contents: write  # Needed to upload releases to GitHub
 
 jobs:
   publish:
-    name: 🚀 Publish package
     runs-on: ubuntu-latest
-
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
@@ -21,17 +20,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-          cache: 'pip'
 
       - name: 📦 Install build backend
         run: pip install build
 
-      - name: 🛠️ Build distribution
+      - name: 🛠️ Build package
         run: python -m build
 
       - name: 🚀 Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
           attestations: true
