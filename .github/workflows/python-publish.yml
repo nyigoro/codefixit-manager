@@ -3,7 +3,7 @@ name: 📦 Release to PyPI (Trusted Publisher)
 on:
   push:
     tags:
-      - 'v1.0.0'  # Only run on version tags
+      - 'v*.*.*'  # Only run on version tags
 
 permissions:
   id-token: write  # Required for OIDC
@@ -12,6 +12,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: pypi-release
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
