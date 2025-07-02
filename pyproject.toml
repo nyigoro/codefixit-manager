@@ -13,7 +13,8 @@ keywords = ["refactor", "cli", "modernizer", "codefix", "qt5to6", "cfm"]
 dependencies = [
   "colorama",
   "rich",
-  "requests"
+  "requests",
+  "openai" 
 ]
 
 [project.scripts]
