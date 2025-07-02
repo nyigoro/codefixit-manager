@@ -1,15 +1,24 @@
 [project]
 name = "codefixit-manager"
 version = "0.1.0"
-description = "Modernize and refactor legacy codebases with AI and rule-based transforms"
+description = "🛠️ A powerful CLI to modernize and refactor codebases using customizable rule packs."
 readme = "README.md"
 requires-python = ">=3.7"
 license = {text = "MIT"}
 authors = [
   {name = "nyigoro", email = "nyigoro@gmail.com"}
 ]
+keywords = ["refactor", "cli", "modernizer", "codefix", "qt5to6", "cfm"]
 
-dependencies = []
+dependencies = [
+  "colorama",
+  "rich",
+  "requests"
+]
 
 [project.scripts]
 cfm = "cfm.cli:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
